@@ -5,61 +5,65 @@ import com.google.gson.GsonBuilder;
 
 import java.util.Arrays;
 
-class Address {
 
-    String country;
-    String city;
-
-    @Override
-    public String toString() {
-        return "Adress{" +
-                "country='" + country + '\'' +
-                ", city='" + city + '\'' +
-                '}';
-    }
-
-}
-
-class Person {
+class File {
     String name;
-    String surname;
-    String[] phones;
-    int age;
-    Address address;
+    int size;
+    String type;
 
     @Override
     public String toString() {
-        return "Person{" +
+        return "File{" +
                 "name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
-                ", phones=" + Arrays.toString(phones) +
-                ", age=" + age +
+                ", size=" + size +
+                ", type='" + type + '\'' +
                 '}';
     }
 }
+
+class FileCounter {
+    int count;
+    File[] files;
+
+    boolean isCounterCorrect() {
+        if (files == null) {
+            return false;
+        }
+        return count == files.length;
+    }
+
+    @Override
+    public String toString() {
+        return "FileCounter{" +
+                "count=" + count +
+                ", files=" + Arrays.toString(files) +
+                '}';
+    }
+}
+
 
 public class App {
 
     static final String JSON = """
             {
-            "name" : "Vsevolod",
-            "surname" : "Ievgenko",
-            "phones" : ["347843921", "6739820836"],
-            "age" : 46,
-            "address" : {
-                "country" : "UA",
-                "city" : "Kyiv"
-             }
-            }       
-         """;
+              "count": 2,
+              "files": [
+                {"name": "1.txt", "size": 1234, "type": "txt"},
+                {"name": "2.png", "size": 456, "type": "png"}
+              ]
+            }
+            """;
 
     public static void main(String[] args) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        Person person = gson.fromJson(JSON, Person.class);
-        System.out.println(person);
 
-        person.age = 15;
-        String json = gson.toJson(person);
-        System.out.println(json);
+        FileCounter fileCounter = gson.fromJson(JSON, FileCounter.class);
+
+        System.out.println(fileCounter.isCounterCorrect());
+        fileCounter.count = 3;
+
+        String s = gson.toJson(fileCounter);
+        System.out.println(s);
+
     }
 }
